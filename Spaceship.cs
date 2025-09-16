@@ -8,7 +8,7 @@ public class Spaceship
     {
         _spaceshot = spaceshot;
     }
-    
+
     public void AbortMission(bool waitForCompletion = false)
     {
         _spaceshot.AbortMission(waitForCompletion);
@@ -18,5 +18,4 @@ public class Spaceship
     {
         await _spaceshot.AbortMissionAsync(waitForCompletion);
     }
-    
 }
