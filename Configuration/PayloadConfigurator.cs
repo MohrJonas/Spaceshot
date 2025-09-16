@@ -1,10 +1,10 @@
 #region
 
-using Mohr.Jonas.Spaceshot.Spaceshot.IOC;
+using Mohr.Jonas.Spaceshot.IOC;
 
 #endregion
 
-namespace Mohr.Jonas.Spaceshot.Spaceshot.Configuration;
+namespace Mohr.Jonas.Spaceshot.Configuration;
 
 public sealed class PayloadConfigurator
 {

@@ -3,35 +3,30 @@
 using System.Globalization;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Mohr.Jonas.Spaceshot.Spaceshot.Abstractions;
-using Mohr.Jonas.Spaceshot.Spaceshot.Configuration;
-using Mohr.Jonas.Spaceshot.Spaceshot.IOC;
-using Mohr.Jonas.Spaceshot.Spaceshot.Services;
+using Mohr.Jonas.Spaceshot.Abstractions;
+using Mohr.Jonas.Spaceshot.Configuration;
+using Mohr.Jonas.Spaceshot.IOC;
+using Mohr.Jonas.Spaceshot.Services;
 
 #endregion
 
-namespace Mohr.Jonas.Spaceshot.Spaceshot;
+namespace Mohr.Jonas.Spaceshot;
 
 public class Spaceshot
 {
     private readonly ILogger _logger;
     private readonly DiContainer _diContainer;
-    private readonly PayloadEvictor _payloadEvictor;
     private readonly ServicesContainer _servicesContainer = new();
     private readonly CancellationTokenSource _tokenSource = new();
-    private readonly Spaceship _spaceship;
     private readonly ManualResetEventSlim _shutdownCompleteEvent = new(false);
     
     public Spaceshot(ILogger logger)
     {
         _logger = logger;
         _diContainer = new DiContainer(logger);
-        _payloadEvictor = new PayloadEvictor(logger, _diContainer);
-        _spaceship = new Spaceship(this);
-        
         var configurator = new PayloadConfigurator(_diContainer);
-        configurator.RegisterSingleton((_, _) => _payloadEvictor);
-        configurator.RegisterSingleton((_, _) => _spaceship);
+        configurator.RegisterSingleton((_, _) => new PayloadEvictor(logger, _diContainer));
+        configurator.RegisterSingleton((_, _) => new Spaceship(this));
         configurator.RegisterSingleton((_, _) => configurator);
     }
     

@@ -3,11 +3,11 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using Mohr.Jonas.Spaceshot.Spaceshot.Abstractions;
+using Mohr.Jonas.Spaceshot.Abstractions;
 
 #endregion
 
-namespace Mohr.Jonas.Spaceshot.Spaceshot.IOC;
+namespace Mohr.Jonas.Spaceshot.IOC;
 
 public sealed class DiContainer : IDiContainer
 {

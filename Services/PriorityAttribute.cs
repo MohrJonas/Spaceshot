@@ -1,4 +1,4 @@
-namespace Mohr.Jonas.Spaceshot.Spaceshot.Services;
+namespace Mohr.Jonas.Spaceshot.Services;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class PriorityAttribute(Priority priority) : Attribute
