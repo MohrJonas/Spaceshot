@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace Mohr.Jonas.Spaceshot.Spaceshot.IOC;
+namespace Mohr.Jonas.Spaceshot.IOC;
 
 public class PayloadEvictor
 {

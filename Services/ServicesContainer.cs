@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 
 #endregion
 
-namespace Mohr.Jonas.Spaceshot.Spaceshot.Services;
+namespace Mohr.Jonas.Spaceshot.Services;
 
 internal sealed class ServicesContainer
 {

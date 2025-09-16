@@ -1,4 +1,4 @@
-namespace Mohr.Jonas.Spaceshot.Spaceshot.Abstractions;
+namespace Mohr.Jonas.Spaceshot.Abstractions;
 
 /// <summary>
 ///     Base interface for classes providing dependency injection

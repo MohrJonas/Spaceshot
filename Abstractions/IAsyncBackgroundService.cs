@@ -1,4 +1,4 @@
-namespace Mohr.Jonas.Spaceshot.Spaceshot.Abstractions;
+namespace Mohr.Jonas.Spaceshot.Abstractions;
 
 public interface IAsyncBackgroundService
 {

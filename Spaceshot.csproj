@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Mohr.Jonas.Spaceshot.Spaceshot</RootNamespace>
+        <RootNamespace>Mohr.Jonas.Spaceshot</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

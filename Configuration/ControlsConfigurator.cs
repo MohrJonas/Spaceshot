@@ -1,12 +1,12 @@
 #region
 
-using Mohr.Jonas.Spaceshot.Spaceshot.Abstractions;
-using Mohr.Jonas.Spaceshot.Spaceshot.IOC;
-using Mohr.Jonas.Spaceshot.Spaceshot.Services;
+using Mohr.Jonas.Spaceshot.Abstractions;
+using Mohr.Jonas.Spaceshot.IOC;
+using Mohr.Jonas.Spaceshot.Services;
 
 #endregion
 
-namespace Mohr.Jonas.Spaceshot.Spaceshot.Configuration;
+namespace Mohr.Jonas.Spaceshot.Configuration;
 
 public sealed class ControlsConfigurator
 {

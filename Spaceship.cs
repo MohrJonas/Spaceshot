@@ -1,4 +1,4 @@
-namespace Mohr.Jonas.Spaceshot.Spaceshot;
+namespace Mohr.Jonas.Spaceshot;
 
 public class Spaceship
 {

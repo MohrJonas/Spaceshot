@@ -1,4 +1,4 @@
-namespace Mohr.Jonas.Spaceshot.Spaceshot.IOC;
+namespace Mohr.Jonas.Spaceshot.IOC;
 
 internal sealed record Injectable(
     string? Key,
