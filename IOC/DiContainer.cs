@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Mohr.Jonas.Spaceshot.Abstractions;
+using Mohr.Jonas.Spaceshot.Exceptions;
 
 #endregion
 
@@ -23,20 +24,30 @@ public sealed class DiContainer : IDiContainer
 
     public object GetValueForType(Type injectedClassType, Type type)
     {
-        var injectable = _injectables.Single(injectable => injectable.ProvidedType == type);
-        return GetValue(injectedClassType, injectable);
+        var injectables = _injectables.Where(injectable => injectable.ProvidedType.IsAssignableTo(type)).ToArray();
+        return injectables.Length switch
+        {
+            0 => throw new NoInjectableFoundException(type),
+            1 => GetValue(injectedClassType, injectables[0]),
+            _ => throw new AmbiguousInjectionException(type)
+        };
     }
 
     public object GetValueForKey(Type injectedClassType, string key)
     {
-        var injectable = _injectables.Single(injectable => injectable.Key == key);
-        return GetValue(injectedClassType, injectable);
+        var injectables = _injectables.Where(injectable => injectable.Key == key).ToArray();
+        return injectables.Length switch
+        {
+            0 => throw new NoInjectableFoundException(key),
+            1 => GetValue(injectedClassType, injectables[0]),
+            _ => throw new AmbiguousInjectionException(key)
+        };
     }
 
     public bool EvictValueForType(Type type)
     {
-        var injectable = _injectables.FirstOrDefault(injectable => injectable.ProvidedType == type);
-        if(injectable?.Instance == null)
+        var injectable = _injectables.FirstOrDefault(injectable => injectable.ProvidedType.IsAssignableTo(type));
+        if (injectable?.Instance == null)
             return false;
         injectable.Instance = null;
         return true;
@@ -45,7 +56,7 @@ public sealed class DiContainer : IDiContainer
     public bool EvictValueForKey(string key)
     {
         var injectable = _injectables.FirstOrDefault(injectable => injectable.Key == key);
-        if(injectable?.Instance == null)
+        if (injectable?.Instance == null)
             return false;
         injectable.Instance = null;
         return true;

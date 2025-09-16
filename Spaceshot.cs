@@ -5,6 +5,7 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Mohr.Jonas.Spaceshot.Abstractions;
 using Mohr.Jonas.Spaceshot.Configuration;
+using Mohr.Jonas.Spaceshot.Exceptions;
 using Mohr.Jonas.Spaceshot.IOC;
 using Mohr.Jonas.Spaceshot.Services;
 
@@ -14,12 +15,12 @@ namespace Mohr.Jonas.Spaceshot;
 
 public class Spaceshot
 {
-    private readonly ILogger _logger;
     private readonly DiContainer _diContainer;
+    private readonly ILogger _logger;
     private readonly ServicesContainer _servicesContainer = new();
-    private readonly CancellationTokenSource _tokenSource = new();
     private readonly ManualResetEventSlim _shutdownCompleteEvent = new(false);
-    
+    private readonly CancellationTokenSource _tokenSource = new();
+
     public Spaceshot(ILogger logger)
     {
         _logger = logger;
@@ -29,7 +30,7 @@ public class Spaceshot
         configurator.RegisterSingleton((_, _) => new Spaceship(this));
         configurator.RegisterSingleton((_, _) => configurator);
     }
-    
+
     private async Task RunSetups()
     {
         using (_logger.BeginScope("Running setups"))
@@ -48,9 +49,23 @@ public class Spaceshot
                         _logger.LogInformation("Running setup {}", setupAdapter.ProvidingType.Name);
                         var instance = setupAdapter.Factory(new DiInjector(setupAdapter.ProvidingType, _diContainer));
                         if (setupAdapter.IsAsync)
-                            await ((IAsyncSetup)instance).SetupAsync();
+                            try
+                            {
+                                await ((IAsyncSetup)instance).SetupAsync();
+                            }
+                            catch (Exception e)
+                            {
+                                throw new AsyncSetupFailedException((IAsyncSetup)instance, e);
+                            }
                         else
-                            await Task.Run(() => ((ISetup)instance).Setup());
+                            try
+                            {
+                                await Task.Run(() => ((ISetup)instance).Setup());
+                            }
+                            catch (Exception e)
+                            {
+                                throw new SetupFailedException((ISetup)instance, e);
+                            }
                     }));
                 }
         }
@@ -74,9 +89,23 @@ public class Spaceshot
                         var instance =
                             teardownAdapter.Factory(new DiInjector(teardownAdapter.ProvidingType, _diContainer));
                         if (teardownAdapter.IsAsync)
-                            await ((IAsyncTeardown)instance).TeardownAsync();
+                            try
+                            {
+                                await ((IAsyncTeardown)instance).TeardownAsync();
+                            }
+                            catch (Exception e)
+                            {
+                                throw new AsyncTeardownFailedException((IAsyncTeardown)instance, e);
+                            }
                         else
-                            await Task.Run(() => ((ITeardown)instance).Teardown());
+                            try
+                            {
+                                await Task.Run(() => ((ITeardown)instance).Teardown());
+                            }
+                            catch (Exception e)
+                            {
+                                throw new TeardownFailedException((ITeardown)instance, e);
+                            }
                     }));
                 }
         }
@@ -94,9 +123,27 @@ public class Spaceshot
                         _diContainer));
                 backgroundServiceAdapter.Instance = instance;
                 if (backgroundServiceAdapter.IsAsync)
-                    await ((IAsyncBackgroundService)instance).SetupAsync();
+                {
+                    try
+                    {
+                        await ((IAsyncBackgroundService)instance).SetupAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new AsyncBackgroundServiceSetupFailedException((IAsyncBackgroundService)instance, e);
+                    }
+                }
                 else
-                    await Task.Run(() => ((IBackgroundService)instance).Setup());
+                {
+                    try
+                    {
+                        await Task.Run(() => ((IBackgroundService)instance).Setup());
+                    }
+                    catch (Exception e)
+                    {
+                        throw new BackgroundServiceSetupFailedException((IBackgroundService)instance, e);
+                    }
+                }
             }
         }
     }
@@ -107,11 +154,29 @@ public class Spaceshot
         {
             foreach (var backgroundServiceAdapter in _servicesContainer.BackgroundServices)
             {
-                _logger.LogInformation("Running background taerdown {}", backgroundServiceAdapter.ProvidingType.Name);
+                _logger.LogInformation("Running background teardown {}", backgroundServiceAdapter.ProvidingType.Name);
                 if (backgroundServiceAdapter.IsAsync)
-                    await ((IAsyncBackgroundService)backgroundServiceAdapter.Instance!).TeardownAsync();
+                {
+                    try
+                    {
+                        await ((IAsyncBackgroundService)backgroundServiceAdapter.Instance!).TeardownAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new AsyncBackgroundServiceTeardownFailedException((IAsyncBackgroundService)backgroundServiceAdapter.Instance!, e);
+                    }
+                }
                 else
-                    await Task.Run(() => ((IBackgroundService)backgroundServiceAdapter.Instance!).Teardown());
+                {
+                    try
+                    {
+                        await Task.Run(() => ((IBackgroundService)backgroundServiceAdapter.Instance!).Teardown());
+                    }
+                    catch (Exception e)
+                    {
+                        throw new BackgroundServiceTeardownFailedException((IBackgroundService)backgroundServiceAdapter.Instance!, e);
+                    }
+                }
             }
         }
     }

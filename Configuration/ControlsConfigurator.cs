@@ -42,13 +42,15 @@ public sealed class ControlsConfigurator
     public void RegisterBackgroundService<TBackgroundService>(Func<DiInjector, TBackgroundService> factory)
         where TBackgroundService : IBackgroundService
     {
-        _services.BackgroundServices.Add(new BackgroundServiceAdapter(typeof(TBackgroundService), false, injector => factory(injector)));
+        _services.BackgroundServices.Add(new BackgroundServiceAdapter(typeof(TBackgroundService), false,
+            injector => factory(injector)));
     }
 
     public void RegisterAsyncBackgroundService<TAsyncBackgroundService>(
         Func<DiInjector, TAsyncBackgroundService> factory)
         where TAsyncBackgroundService : IAsyncBackgroundService
     {
-        _services.BackgroundServices.Add(new BackgroundServiceAdapter(typeof(TAsyncBackgroundService), true, injector => factory(injector)));
+        _services.BackgroundServices.Add(new BackgroundServiceAdapter(typeof(TAsyncBackgroundService), true,
+            injector => factory(injector)));
     }
 }
