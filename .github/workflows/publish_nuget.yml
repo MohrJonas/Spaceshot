@@ -20,7 +20,5 @@ jobs:
       run: dotnet restore
     - name: Pack nuget
       run: dotnet pack --no-restore
-    - name: Authenticate to github packages
-      run: dotnet nuget add source --username MohrJonas --password ${{ secrets.REPOSITORY_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/MohrJonas/index.json"
     - name: Upload nuget package
-      run: dotnet nuget push "bin/Release/Mohr.Jonas.Spaceshot.*.nupkg" --source "github"
+      run: dotnet nuget push "bin/Release/Mohr.Jonas.Spaceshot.*.nupkg" --source "https://api.nuget.org/v3/index.json"
