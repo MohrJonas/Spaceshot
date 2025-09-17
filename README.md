@@ -1,7 +1,4 @@
-<div style="text-align: center; width: 100%; background-color: #ffffff; opacity: 0.8; background: linear-gradient(135deg, #cccccf55 25%, transparent 25%) -14px 0/ 28px 28px, linear-gradient(225deg, #cccccf 25%, transparent 25%) -14px 0/ 28px 28px, linear-gradient(315deg, #cccccf55 25%, transparent 25%) 0 0/ 28px 28px, linear-gradient(45deg, #cccccf 25%, #ffffff 25%) 0 0/ 28px 28px;">
-    <h1>🚀 Spaceshot</h1>
-    <h4>An alternative apphost</h4>
-</div>
+# 🚀 Spaceshot - An alternative apphost
 
 ## About
 
