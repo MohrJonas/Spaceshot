@@ -21,4 +21,4 @@ jobs:
     - name: Pack nuget
       run: dotnet pack --no-restore
     - name: Upload nuget package
-      run: dotnet nuget push "bin/Release/Mohr.Jonas.Spaceshot.*.nupkg" --source "https://api.nuget.org/v3/index.json"
+      run: dotnet nuget push "bin/Release/Mohr.Jonas.Spaceshot.*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ secrets.REPOSITORY_TOKEN }}
